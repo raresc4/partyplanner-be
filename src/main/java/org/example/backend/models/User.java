@@ -15,11 +15,4 @@ public class User {
     private String username;
     private String password;
     private Date accountCreationDate;
-    @Override
-    public String toString() {
-        return "User{" +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }

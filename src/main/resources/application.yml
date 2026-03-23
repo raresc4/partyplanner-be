@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: backend
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  security:
+    user:
+      name: rares
+      password: rares
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/PartyPlanner
+tokenSecret: aabe4736221fdfdbfc897bb3c7ed9605f5508c98556193854afd600a1ffc59ec

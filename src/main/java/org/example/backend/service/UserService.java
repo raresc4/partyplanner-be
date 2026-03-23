@@ -28,6 +28,10 @@ public class UserService {
     private final EventService eventService;
     private final EventRepository eventRepository;
 
+    public List<User> getAllUsersExcludingSome(List<String> usernames) {
+        return userRepository.findUsersByUsernameNotIn(usernames);
+    }
+
     public User createUser(User user) {
         Optional<User> existingUser = userRepository.findUserByUsername(user.getUsername());
         if(existingUser.isPresent()) throw new ConflictException("User already exists");

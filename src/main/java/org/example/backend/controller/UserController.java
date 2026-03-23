@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.GetAllUsersExcludingSomeDto;
 import org.example.backend.dto.LoginDto;
 import org.example.backend.dto.UserDto;
 import org.example.backend.mapper.UserMapper;
@@ -13,6 +14,8 @@ import org.example.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -65,4 +68,10 @@ public class UserController {
         userService.deleteUser(username, response);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/getAllExcludingSome")
+    public ResponseEntity<List<UserDto>> getAllExcludingSome(@RequestBody GetAllUsersExcludingSomeDto excludingSomeDto) {
+        return ResponseEntity.ok(userService.getAllUsersExcludingSome(excludingSomeDto.getUsernames()).stream().map(userMapper::toDto).toList());
+    }
+
 }
