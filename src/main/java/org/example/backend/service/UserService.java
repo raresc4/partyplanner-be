@@ -1,8 +1,10 @@
 package org.example.backend.service;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.example.backend.dto.ChangePasswordRequestDto;
 import org.example.backend.dto.LoginDto;
 import org.example.backend.exception.ConflictException;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -54,6 +57,7 @@ public class UserService {
         }
 
         setCookie(jwtService.getToken(loginDto.getUsername()), response);
+        log.info("User logged in: {}", loginDto.getUsername());
     }
 
     public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
@@ -73,12 +77,14 @@ public class UserService {
     }
 
     public void logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", "");
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setSecure(true);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     public void deleteUser(String username, HttpServletResponse response) {
@@ -104,10 +110,13 @@ public class UserService {
     }
 
     private void setCookie(String token, HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setSecure(true);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .maxAge(10 * 60 * 60)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

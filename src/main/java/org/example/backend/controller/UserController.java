@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
